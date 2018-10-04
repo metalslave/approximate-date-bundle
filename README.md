@@ -10,7 +10,7 @@ A bundle for formatting dates with the output of the seasons or month without an
 [...]
 "require" : {
     [...]
-    "metalslave/approximate-date-bundle" : "dev-master"
+    "metalslave/approximate-date-bundle" : "0.1.0"
 },
 "repositories" : [{
     "type" : "vcs",
