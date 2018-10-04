@@ -39,8 +39,8 @@ public function registerBundles()
 
 
 ### Usage
-#### Currently, the bands describe the seasons for "uk" and "en" locales, but you can easily expand it. 
-add to config.yml
+Currently, the bands describe the seasons for "uk" and "en" locales, but you can easily expand it. 
+Add to config.yml
 ```php
 metalslave_approximate_date:
     month_and_seasons_data_service: AppBundle\Services\AppMonthAndSeasonDataService 
