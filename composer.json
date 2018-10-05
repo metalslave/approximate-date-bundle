@@ -1,5 +1,5 @@
 {
-    "name": "metalslave/approximateDateBundle",
+    "name": "metalslave/approximate-date-bundle",
     "description": "Approximate date bundle",
     "version" : "1.0.0",
     "type": "symfony-bundle",
@@ -8,6 +8,11 @@
         "name" : "Andrij Tomchyshyn",
         "email" : "andrij.tomchyshyn@stfalcon.com"
     }],
+    "keywords" : [
+        "symfony",
+        "twig",
+        "DateTime"
+    ],
     "autoload": {
         "psr-4": {
             "Metalslave\\ApproximateDateBundle\\": ""
