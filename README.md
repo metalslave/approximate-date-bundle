@@ -10,7 +10,7 @@ A twig extension bundle for formatting dates with the output of the seasons or m
 [...]
 "require" : {
     [...]
-    "metalslave/approximate-date-bundle" : "0.2.0"
+    "metalslave/approximate-date-bundle" : "dev-master"
 },
 "repositories" : [{
     "type" : "vcs",
