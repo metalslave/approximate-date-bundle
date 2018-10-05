@@ -1,11 +1,8 @@
 services:
-    months_and_seasons_data:
-        class: "%metalslave_approximate_date.month_and_seasons_data_service%"
-
     twig.extension.approximate_date:
         class: Metalslave\ApproximateDateBundle\Twig\Extension\ApproximateDateExtension
         arguments:
             - "@sonata.intl.twig.extension.datetime"
-            - "@months_and_seasons_data"
+            - "@translator"
         tags:
             - { name: twig.extension}
