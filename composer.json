@@ -1,7 +1,7 @@
 {
     "name": "metalslave/approximateDateBundle",
     "description": "Approximate date bundle",
-    "version" : "0.2.0",
+    "version" : "1.0.0",
     "type": "symfony-bundle",
     "license": "MIT",
     "authors" : [{
@@ -20,7 +20,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.2.0-dev"
+            "dev-master": "1.x-dev"
         }
     }
 }
