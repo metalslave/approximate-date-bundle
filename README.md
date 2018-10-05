@@ -20,7 +20,7 @@ A twig extension bundle for formatting dates with the output of the seasons or m
 ```
 ### Add dependency via Composer
 
-```php composer.phar require metalslave/approximateDateBundle```
+```php composer.phar require "metalslave/approximateDateBundle"="1.x-dev"```
 
 ### Register the bundles
 
