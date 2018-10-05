@@ -2,34 +2,41 @@
 
 namespace Metalslave\ApproximateDateBundle\Twig\Extension;
 
-use Metalslave\ApproximateDateBundle\Services\MonthAndSeasonsInterface;
 use Sonata\IntlBundle\Twig\Extension\DateTimeExtension;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class ApproximateDateExtension for replace months name to nominative or season.
  */
 class ApproximateDateExtension extends \Twig_Extension
 {
-    /** @var array  */
-    private $monthsAndSeasonsData;
-
     /** @var DateTimeExtension */
     private $intlTwigDateTimeService;
 
     /** @var int */
     private $monthsAndSeasonsArrayIndex;
 
+    /** @var TranslatorInterface */
+    private $translator;
+
+    /** @var string */
+    private $replaceChars = '_!?*#&$@~';
+
+    /** @var string */
+    private $selectedChar = null;
+
     const YEAR_SEASON_FORMAT = 'S';
+
     /**
      * AppDateTimeExtension constructor.
      *
-     * @param DateTimeExtension        $intlTwigDateTimeService
-     * @param MonthAndSeasonsInterface $monthsAndSeasonsDataService
+     * @param DateTimeExtension   $intlTwigDateTimeService
+     * @param TranslatorInterface $translator
      */
-    public function __construct($intlTwigDateTimeService, MonthAndSeasonsInterface $monthsAndSeasonsDataService)
+    public function __construct($intlTwigDateTimeService, TranslatorInterface $translator)
     {
         $this->intlTwigDateTimeService = $intlTwigDateTimeService;
-        $this->monthsAndSeasonsData = $monthsAndSeasonsDataService->getMonthsAndSeasons();
+        $this->translator = $translator;
     }
 
     /**
@@ -71,7 +78,7 @@ class ApproximateDateExtension extends \Twig_Extension
     }
 
     /**
-     * Show date only
+     * Show date only.
      *
      * @param \Datetime|string|int $date
      * @param string|null          $pattern
@@ -91,7 +98,7 @@ class ApproximateDateExtension extends \Twig_Extension
     }
 
     /**
-     * Show (day and month)/season only
+     * Show (day and month)/season only.
      *
      * @param \Datetime|string|int $date
      * @param string|null          $pattern
@@ -134,7 +141,7 @@ class ApproximateDateExtension extends \Twig_Extension
     }
 
     /**
-     * Show time only
+     * Show time only.
      *
      * @param \Datetime|string|int $time
      * @param string|null          $pattern
@@ -199,17 +206,23 @@ class ApproximateDateExtension extends \Twig_Extension
     {
         $result = $formattedDate;
 
-        if (null !== $pattern &&
-            isset($this->monthsAndSeasonsData[$locale]) &&
-            false === strpos($pattern, 'd') &&
-            false === strpos($pattern, 'j')
-        ) {
-            foreach ($this->monthsAndSeasonsData[$locale] as $key => $month) {
-                if (false !== strpos($formattedDate, $key)) {
-                    $result = str_replace($key, $month[(int) $this->monthsAndSeasonsArrayIndex], $formattedDate);
-                    break;
-                }
+        if (null !== $pattern && false === strpos($pattern, 'd')) {
+            //translation does not return the correct value if there is a character ':' in the initial string
+            if (false !== strpos($formattedDate, ':')) {
+                $this->replaceDoubleDots($formattedDate);
             }
+            $dataWords = explode(' ', $formattedDate);
+            foreach ($dataWords as $key => $word) {
+                $dataWords[$key] = $this->translator->transChoice(
+                    $word,
+                    (int) $this->monthsAndSeasonsArrayIndex,
+                    [],
+                    'MetalslaveApproximateDateBundle',
+                    $locale
+                );
+            }
+            $result = implode(' ', $dataWords);
+            $this->backupDoubleDots($result);
         }
 
         return $result;
@@ -225,6 +238,31 @@ class ApproximateDateExtension extends \Twig_Extension
         $this->monthsAndSeasonsArrayIndex = (int) (false !== strpos($pattern, self::YEAR_SEASON_FORMAT));
         if ($this->monthsAndSeasonsArrayIndex) {
             $pattern = str_replace(self::YEAR_SEASON_FORMAT, 'MMMM', $pattern);
+        }
+    }
+
+    /**
+     * @param mixed $str
+     */
+    private function replaceDoubleDots(&$str)
+    {
+        $chars = str_split($this->replaceChars);
+        foreach ($chars as $char) {
+            if (false === strpos($str, $char)) {
+                $this->selectedChar = $char;
+                $str = str_replace(':', $this->selectedChar, $str);
+                break;
+            }
+        }
+    }
+
+    /**
+     * @param mixed $str
+     */
+    private function backupDoubleDots(&$str)
+    {
+        if (null !== $this->selectedChar) {
+            $str = str_replace($this->selectedChar, ':', $str);
         }
     }
 }
