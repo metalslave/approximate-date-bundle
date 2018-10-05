@@ -31,7 +31,8 @@ public function registerBundles()
 {
     $bundles = [
         // Other bundles...
-        
+
+        new Sonata\IntlBundle\SonataIntlBundle(),
         new Metalslave\ApproximateDateBundle\MetalslaveApproximateDateBundle(),
     ];
 }
